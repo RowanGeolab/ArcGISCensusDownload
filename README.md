@@ -27,3 +27,8 @@ Census Tables from the 2010 Decennial Census:
 - P0010001: Population
 
 Output should be specified as a geodatabase feature class. Aliases for field names will be included in the output feature class. 
+
+## License
+&copy; 2014 John Reiser, Rowan University
+
+[Licensed under the GPLv3.](https://www.gnu.org/copyleft/gpl.html)
