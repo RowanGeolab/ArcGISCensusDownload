@@ -25,8 +25,25 @@ Census Tables from the 2010 Decennial Census:
 - H0040003: Owned free and clear
 - H0040004: Renter occupied
 - P0010001: Population
+- P0100002: Population of one race
+- P0100003: Population of one race: White alone
+- P0100004: Population of one race: Black or African American alone
+- P0100005: Population of one race: American Indian and Alaska Native alone
+- P0100006: Population of one race: Asian alone
+- P0100007: Population of one race: Native Hawaiian and Other Pacific Islander alone
+- P0100008: Population of one race: Some Other Race alone
+- P0100009: Population of one race: Two or More Races
+- P0110002: Hispanic or Latino
+- P0110003: Not Hispanic or Latino
+- P0120002: Male
+- P0120026: Female
+
+Tables can be easily added to the script by altering the `censustables` dict in the tool source. Suggestions welcome regarding additional tables to be included in this default list. 
 
 Output should be specified as a geodatabase feature class. Aliases for field names will be included in the output feature class. 
+
+## Screenshot
+![Screenshot of Census Download tool.](/RowanGeolab/ArcGISCensusDownload/master/arcgispythontoolbox.png?raw=true)
 
 ## License
 &copy; 2014 John Reiser, Rowan University
