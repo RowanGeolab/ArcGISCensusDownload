@@ -32,7 +32,19 @@ class CDExtent(object):
                 "H0040002": {"alias": "Owned with a mortgage or a loan", "type": "LONG"},
                 "H0040003": {"alias": "Owned free and clear", "type": "LONG"},
                 "H0040004": {"alias": "Renter occupied", "type": "LONG"},
-                "P0010001": {"alias": "Population", "type": "LONG"}
+                "P0010001": {"alias": "Population", "type": "LONG"},
+                "P0100002": {"alias": "Population of one race", "type": "LONG"},
+                "P0100003": {"alias": "Population of one race: White alone", "type": "LONG"},
+                "P0100004": {"alias": "Population of one race: Black or African American alone", "type": "LONG"},
+                "P0100005": {"alias": "Population of one race: American Indian and Alaska Native alone", "type": "LONG"},
+                "P0100006": {"alias": "Population of one race: Asian alone", "type": "LONG"},
+                "P0100007": {"alias": "Population of one race: Native Hawaiian and Other Pacific Islander alone", "type": "LONG"},
+                "P0100008": {"alias": "Population of one race: Some Other Race alone", "type": "LONG"},
+                "P0100009": {"alias": "Population of one race: Two or More Races", "type": "LONG"},
+                "P0110002": {"alias": "Hispanic or Latino", "type": "LONG"},
+                "P0110003": {"alias": "Not Hispanic or Latino", "type": "LONG"},
+                "P0120002": {"alias": "Male", "type": "LONG"},
+                "P0120026": {"alias": "Female", "type": "LONG"}
             }
 
     def getParameterInfo(self):
@@ -158,7 +170,7 @@ class CDExtent(object):
 
         global censusAPIkey
         if censusAPIkey == "insert_your_key_here":
-            messages.addErrorMessage("Invalid Census API key. Please modify this ")
+            messages.addErrorMessage("Invalid Census API key. Please modify this Toolbox using a text editor to include your Census API key.")
             raise arcpy.ExecuteError
 
         cursor = arcpy.da.InsertCursor(censuspath, curfld)
