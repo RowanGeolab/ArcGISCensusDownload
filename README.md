@@ -43,7 +43,7 @@ Tables can be easily added to the script by altering the `censustables` dict in 
 Output should be specified as a geodatabase feature class. Aliases for field names will be included in the output feature class. 
 
 ## Screenshot
-![Screenshot of Census Download tool.](/RowanGeolab/ArcGISCensusDownload/master/arcgispythontoolbox.png?raw=true)
+![Screenshot of Census Download tool.](//raw.githubusercontent.com/RowanGeolab/ArcGISCensusDownload/master/arcgispythontoolbox.png)
 
 ## License
 &copy; 2014 John Reiser, Rowan University
