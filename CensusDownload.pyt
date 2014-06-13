@@ -20,8 +20,8 @@ class Toolbox(object):
 class CDExtent(object):
     def __init__(self):
         """Define the tool (tool name is the name of the class)."""
-        self.label = "Census Download - By Extent"
-        self.description = "Download GIS data from the Census using a defined extent."
+        self.label = "Census 2010 Download - By Extent"
+        self.description = "Download GIS data and demographics from the Decennial 2010 Census using a defined extent."
         self.canRunInBackground = False
         self.supportedGeometries = ['Tract', 'Block Group', 'Block']
         self.censustables = {
@@ -43,7 +43,21 @@ class CDExtent(object):
                 "P0110002": {"alias": "Hispanic or Latino", "type": "LONG"},
                 "P0110003": {"alias": "Not Hispanic or Latino", "type": "LONG"},
                 "P0120002": {"alias": "Male", "type": "LONG"},
-                "P0120026": {"alias": "Female", "type": "LONG"}
+                "P0120026": {"alias": "Female", "type": "LONG"},
+                "P0180001": {"alias": "Households", "type": "LONG"},
+                "P0180002": {"alias": "Family Households", "type": "LONG"},
+                "P0180003": {"alias": "Family Households - Husband-wife Family", "type": "LONG"},
+                "P0180004": {"alias": "Family Households - Other family", "type": "LONG"},
+                "P0180005": {"alias": "Family Households - Other family: Male, no wife", "type": "LONG"},
+                "P0180006": {"alias": "Family Households - Other family: Female, no husband", "type": "LONG"},
+                "P0180007": {"alias": "Nonfamily Households", "type": "LONG"},
+                "P0180008": {"alias": "Nonfamily Households: Householder living alone", "type": "LONG"},
+                "P0180009": {"alias": "Nonfamily Households: Householder not living alone", "type": "LONG"},
+                "P0020002": {"alias": "Urban", "type": "LONG"},
+                "P0020003": {"alias": "Urban: Inside urbanized areas", "type": "LONG"},
+                "P0020004": {"alias": "Urban: Inside urban clusters", "type": "LONG"},
+                "P0020005": {"alias": "Rural", "type": "LONG"},
+                "P0020006": {"alias": "Urban-Rural: Not defined", "type": "LONG"},
             }
 
     def getParameterInfo(self):
@@ -137,15 +151,15 @@ class CDExtent(object):
 
         if(geom in self.supportedGeometries):
             if(geom == "Tract"):
-                geourl = "http://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Tracts_Blocks/MapServer/10/query?where=&text=&objectIds=&geometryType=esriGeometryEnvelope&geometry={0},{1},{2},{3}&inSR=4326&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=STATE,COUNTY,TRACT&returnGeometry=true&outSR=4326&returnIdsOnly=false&returnZ=false&returnM=false&returnDistinctValues=false&f=pjson".format(in_extent.XMin, in_extent.YMin, in_extent.XMax, in_extent.YMax)
+                geourl = "http://tigerweb.geo.census.gov/arcgis/rest/services/Census2010/Tracts_Blocks/MapServer/0/query?where=&text=&objectIds=&geometryType=esriGeometryEnvelope&geometry={0},{1},{2},{3}&inSR=4326&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=STATE,COUNTY,TRACT&returnGeometry=true&outSR=4326&returnIdsOnly=false&returnZ=false&returnM=false&returnDistinctValues=false&f=pjson".format(in_extent.XMin, in_extent.YMin, in_extent.XMax, in_extent.YMax)
                 apiurl = "http://api.census.gov/data/2010/sf1?key={k}&get={tbl}&for=tract:{t}&in=state:{s}+county:{c}"
             if(geom == "Block Group"):
-                geourl = "http://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Tracts_Blocks/MapServer/11/query?where=&text=&objectIds=&geometryType=esriGeometryEnvelope&geometry={0},{1},{2},{3}&inSR=4326&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=STATE,COUNTY,TRACT,BLKGRP&returnGeometry=true&outSR=4326&returnIdsOnly=false&returnZ=false&returnM=false&returnDistinctValues=false&f=pjson".format(in_extent.XMin, in_extent.YMin, in_extent.XMax, in_extent.YMax)
+                geourl = "http://tigerweb.geo.census.gov/arcgis/rest/services/Census2010/Tracts_Blocks/MapServer/1/query?where=&text=&objectIds=&geometryType=esriGeometryEnvelope&geometry={0},{1},{2},{3}&inSR=4326&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=STATE,COUNTY,TRACT,BLKGRP&returnGeometry=true&outSR=4326&returnIdsOnly=false&returnZ=false&returnM=false&returnDistinctValues=false&f=pjson".format(in_extent.XMin, in_extent.YMin, in_extent.XMax, in_extent.YMax)
                 apiurl = "http://api.census.gov/data/2010/sf1?key={k}&get={tbl}&for=block+group:{bg}&in=state:{s}+county:{c}+tract:{t}"
                 arcpy.AddField_management(censuspath, "blockgroup",  "TEXT", "", "", "2", "Block Group", "NULLABLE", "NON_REQUIRED", "")
                 curfld.append("blockgroup")
             if(geom == "Block"):
-                geourl = "http://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Tracts_Blocks/MapServer/12/query?where=&text=&objectIds=&geometryType=esriGeometryEnvelope&geometry={0},{1},{2},{3}&inSR=4326&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=STATE,COUNTY,TRACT,BLOCK&returnGeometry=true&outSR=4326&returnIdsOnly=false&returnZ=false&returnM=false&returnDistinctValues=false&f=pjson".format(in_extent.XMin, in_extent.YMin, in_extent.XMax, in_extent.YMax)
+                geourl = "http://tigerweb.geo.census.gov/arcgis/rest/services/Census2010/Tracts_Blocks/MapServer/2/query?where=&text=&objectIds=&geometryType=esriGeometryEnvelope&geometry={0},{1},{2},{3}&inSR=4326&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=STATE,COUNTY,TRACT,BLOCK&returnGeometry=true&outSR=4326&returnIdsOnly=false&returnZ=false&returnM=false&returnDistinctValues=false&f=pjson".format(in_extent.XMin, in_extent.YMin, in_extent.XMax, in_extent.YMax)
                 apiurl = "http://api.census.gov/data/2010/sf1?key={k}&get={tbl}&for=block:{b}&in=state:{s}+county:{c}+tract:{t}"                            
                 arcpy.AddField_management(censuspath, "block",  "TEXT", "", "", "4", "Block", "NULLABLE", "NON_REQUIRED", "")
                 curfld.append("block")
@@ -156,6 +170,13 @@ class CDExtent(object):
         try:
             response = urllib2.urlopen(geourl)
             geod = json.loads(response.read())
+            #### how to exceed the exceededTransferLimit
+            #### to be implemented soon
+            #### because these areas are dynamically defined by the user, we can't pull
+            #### everything down similar to how chupaESRI works.
+            #### Instead, first make a request for returnIdsOnly=true
+            #### then request only those IDs, limiting the request count to the 
+            #### server's max response.
         except Exception as e:
             messages.addErrorMessage("Received invalid response from TIGERWeb at the following URL: {0}".format(geourl))
             messages.addMessage(e)

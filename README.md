@@ -1,11 +1,11 @@
 # Census Download Toolbox for ArcGIS
 
-A [Python Toolbox](http://resources.arcgis.com/en/help/main/10.2/index.html#//001500000022000000) for ArcGIS Desktop (specifically ArcMap) to make quick retrieval of Census information.
+A [Python Toolbox](http://resources.arcgis.com/en/help/main/10.2/index.html#//001500000022000000) for ArcGIS Desktop to make quick retrieval of Census information.
 
 ## Census API Key
 In order for the toolbox to work properly, the CensusDownload.pyt Python Toolbox must be updated with a valid Census API key. 
 
-A Census API key can be requested from the [Census API key request page](http://www.census.gov/developers/tos/key_request.html). 
+A Census API key can be requested from the [Census API key request page](http://www.census.gov/developers/tos/key_request.html). You must modify the CensusDownload.pyt file to include your API key. You must also make sure to activate your key before use.  
 
 ## Download By Extent
 Within the **Census Download - By Extent** tool, a user can specify an area of interest (such as the current map extent) and download Census tracts, block groups, and/or blocks, along with associated Census data. When run from ArcMap, the Census Download tool will reproject the specified extent as necessary, provided the primary data frame in ArcMap has a projection/coordinate system defined. 
