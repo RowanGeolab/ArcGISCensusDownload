@@ -9,8 +9,7 @@ censusAPIkey = "insert_your_key_here"
 
 class Toolbox(object):
     def __init__(self):
-        """Define the toolbox (the name of the toolbox is the name of the
-        .pyt file)."""
+        """Define the toolbox (the name of the toolbox is the name of the .pyt file)."""
         self.label = "Census Download Tools"
         self.alias = ""
 
@@ -138,15 +137,15 @@ class CDExtent(object):
 
         if(geom in self.supportedGeometries):
             if(geom == "Tract"):
-                geourl = "http://tigerweb.geo.census.gov/arcgis/rest/services/Tracts_Blocks/MapServer/10/query?where=&text=&objectIds=&geometryType=esriGeometryEnvelope&geometry={0},{1},{2},{3}&inSR=4326&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=STATE,COUNTY,TRACT&returnGeometry=true&outSR=4326&returnIdsOnly=false&returnZ=false&returnM=false&returnDistinctValues=false&f=pjson".format(in_extent.XMin, in_extent.YMin, in_extent.XMax, in_extent.YMax)
+                geourl = "http://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Tracts_Blocks/MapServer/10/query?where=&text=&objectIds=&geometryType=esriGeometryEnvelope&geometry={0},{1},{2},{3}&inSR=4326&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=STATE,COUNTY,TRACT&returnGeometry=true&outSR=4326&returnIdsOnly=false&returnZ=false&returnM=false&returnDistinctValues=false&f=pjson".format(in_extent.XMin, in_extent.YMin, in_extent.XMax, in_extent.YMax)
                 apiurl = "http://api.census.gov/data/2010/sf1?key={k}&get={tbl}&for=tract:{t}&in=state:{s}+county:{c}"
             if(geom == "Block Group"):
-                geourl = "http://tigerweb.geo.census.gov/arcgis/rest/services/Tracts_Blocks/MapServer/11/query?where=&text=&objectIds=&geometryType=esriGeometryEnvelope&geometry={0},{1},{2},{3}&inSR=4326&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=STATE,COUNTY,TRACT,BLKGRP&returnGeometry=true&outSR=4326&returnIdsOnly=false&returnZ=false&returnM=false&returnDistinctValues=false&f=pjson".format(in_extent.XMin, in_extent.YMin, in_extent.XMax, in_extent.YMax)
+                geourl = "http://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Tracts_Blocks/MapServer/11/query?where=&text=&objectIds=&geometryType=esriGeometryEnvelope&geometry={0},{1},{2},{3}&inSR=4326&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=STATE,COUNTY,TRACT,BLKGRP&returnGeometry=true&outSR=4326&returnIdsOnly=false&returnZ=false&returnM=false&returnDistinctValues=false&f=pjson".format(in_extent.XMin, in_extent.YMin, in_extent.XMax, in_extent.YMax)
                 apiurl = "http://api.census.gov/data/2010/sf1?key={k}&get={tbl}&for=block+group:{bg}&in=state:{s}+county:{c}+tract:{t}"
                 arcpy.AddField_management(censuspath, "blockgroup",  "TEXT", "", "", "2", "Block Group", "NULLABLE", "NON_REQUIRED", "")
                 curfld.append("blockgroup")
             if(geom == "Block"):
-                geourl = "http://tigerweb.geo.census.gov/arcgis/rest/services/Tracts_Blocks/MapServer/12/query?where=&text=&objectIds=&geometryType=esriGeometryEnvelope&geometry={0},{1},{2},{3}&inSR=4326&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=STATE,COUNTY,TRACT,BLOCK&returnGeometry=true&outSR=4326&returnIdsOnly=false&returnZ=false&returnM=false&returnDistinctValues=false&f=pjson".format(in_extent.XMin, in_extent.YMin, in_extent.XMax, in_extent.YMax)
+                geourl = "http://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Tracts_Blocks/MapServer/12/query?where=&text=&objectIds=&geometryType=esriGeometryEnvelope&geometry={0},{1},{2},{3}&inSR=4326&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=STATE,COUNTY,TRACT,BLOCK&returnGeometry=true&outSR=4326&returnIdsOnly=false&returnZ=false&returnM=false&returnDistinctValues=false&f=pjson".format(in_extent.XMin, in_extent.YMin, in_extent.XMax, in_extent.YMax)
                 apiurl = "http://api.census.gov/data/2010/sf1?key={k}&get={tbl}&for=block:{b}&in=state:{s}+county:{c}+tract:{t}"                            
                 arcpy.AddField_management(censuspath, "block",  "TEXT", "", "", "4", "Block", "NULLABLE", "NON_REQUIRED", "")
                 curfld.append("block")
@@ -154,8 +153,13 @@ class CDExtent(object):
             return False
 
         # retrieve the Census Geometry from the TigerWeb ArcGIS Server
-        response = urllib2.urlopen(geourl)
-        geod = json.loads(response.read())
+        try:
+            response = urllib2.urlopen(geourl)
+            geod = json.loads(response.read())
+        except Exception as e:
+            messages.addErrorMessage("Received invalid response from {0}".format(geourl))
+            messages.addMessage(e)
+            raise arcpy.ExecuteError
 
         # if no features returned, provide a warning and stop
         if(len(geod['features']) == 0):
@@ -188,8 +192,14 @@ class CDExtent(object):
                 tblurl = apiurl.format(k=censusAPIkey,t=geoattr["TRACT"],c=geoattr["COUNTY"],s=geoattr["STATE"],tbl=",".join(curfld[4:]))
             
             # request the data from the Census API
-            response = urllib2.urlopen(tblurl)
-            apid = json.loads(response.read())
+            try: 
+                response = urllib2.urlopen(tblurl)
+                apid = json.loads(response.read())
+            except Exception as e:
+                messages.addErrorMessage("Received invalid response from {0}".format(tblurl))
+                messages.addErrorMessage("Confirm that your Census API key is valid and activated.")
+                messages.addMessage(e)
+                raise arcpy.ExecuteError
             
             if(geom == "Tract"):
                 curval.extend(apid[1][:-3])
