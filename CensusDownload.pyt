@@ -157,7 +157,7 @@ class CDExtent(object):
             response = urllib2.urlopen(geourl)
             geod = json.loads(response.read())
         except Exception as e:
-            messages.addErrorMessage("Received invalid response from {0}".format(geourl))
+            messages.addErrorMessage("Received invalid response from TIGERWeb at the following URL: {0}".format(geourl))
             messages.addMessage(e)
             raise arcpy.ExecuteError
 
@@ -196,7 +196,7 @@ class CDExtent(object):
                 response = urllib2.urlopen(tblurl)
                 apid = json.loads(response.read())
             except Exception as e:
-                messages.addErrorMessage("Received invalid response from {0}".format(tblurl))
+                messages.addErrorMessage("Received invalid response from Census API at the following URL:{0}".format(tblurl))
                 messages.addErrorMessage("Confirm that your Census API key is valid and activated.")
                 messages.addMessage(e)
                 raise arcpy.ExecuteError
